@@ -9,7 +9,7 @@ export function cleanInput(input: string): string[]{
 
 export async function startREPL(state: State){
     state.rl.prompt();
-    state.rl.on('line', (line) => {
+    state.rl.on('line', async (line) => {
         
         const words = cleanInput(line);
         if (words.length === 0){
@@ -24,7 +24,11 @@ export async function startREPL(state: State){
             state.rl.prompt();
             return;
         } 
-        cmd.callback(state);
+        try {
+           await cmd.callback(state);
+        } catch (e) {
+            console.log((e as Error).message);
+        }
         
      
         state.rl.prompt();

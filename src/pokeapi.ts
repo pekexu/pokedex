@@ -1,28 +1,53 @@
+import { Cache } from "./pokecache.js";
+
 export class PokeAPI {
     private static readonly baseURL = "https://pokeapi.co/api/v2";
-
-    constructor() {}
+    private cache: Cache;
+    constructor(cacheInterval: number) {
+        this.cache = new Cache(cacheInterval);
+      
+    }
+      closeCache() {
+        this.cache.stopReapLoop();
+      }
 
     async fetchLocations(pageURL?: string): Promise<ShallowLocations> {
       const fullUrl = pageURL || `${PokeAPI.baseURL}/location-area`;
-      
-      try {
-        const response = await fetch (fullUrl);
 
-        if(!response.ok) {
-          throw new Error(`${response.status} ${response.statusText}`);
+        const cached = this.cache.get<ShallowLocations>(fullUrl);
+        if (cached) {
+          return cached;
         }
 
-      const locationData =(await response.json()) as ShallowLocations;
-      return locationData;
-    } catch (e) {
-      throw new Error(`Error fetching locations: ${(e as Error).message}`);
-    }
+      
+        try {
+        
+          const response = await fetch (fullUrl);
+        
+          if(!response.ok) {
+            throw new Error(`${response.status} ${response.statusText}`);
+          }
+        
+      
+        const locationData =(await response.json()) as ShallowLocations;
+        this.cache.add(fullUrl, locationData);
+        return locationData;
+      } catch (e) {
+        throw new Error(`Error fetching locations: ${(e as Error).message}`);
+      }
+  
+
   }
 
     async fetchLocation(locationName: string): Promise<Location> {
       const url = `${PokeAPI.baseURL}/location-area/${locationName}`;
-       try {
+      
+      const cached = this.cache.get<Location>(url);
+        if (cached) {
+         return cached;
+        }
+
+        try {
       const resp = await fetch(url);
 
       if (!resp.ok) {
@@ -30,6 +55,7 @@ export class PokeAPI {
       }
 
       const location: Location = await resp.json();
+      this.cache.add(url, location);
       return location;
     } catch (e) {
       throw new Error(
@@ -40,8 +66,6 @@ export class PokeAPI {
     
     
 }
-
-
 
 export type ShallowLocations = {
     count: number

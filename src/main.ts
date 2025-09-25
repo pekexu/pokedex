@@ -4,7 +4,7 @@ import { initState, State } from "./state.js";
 
 function main() {
 
-    const state = initState();
+    const state = initState(1000 * 60 * 5);
     startREPL(state);
 }
 
