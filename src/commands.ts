@@ -5,9 +5,15 @@ import type { CLICommand } from "./state.js";
 import { commandMap } from "./command_map.js";
 import { commandMapBack } from "./command_map.js";
 import { commandExplore } from "./command_explore.js";
+import { commandCatch } from "./command_catch.js";
 
 export function getCommands(): Record<string, CLICommand> {
     return {
+    catch: {
+        name: "catch",
+        description: "Tries to catch pokemon by name. Usage 'catch pokemon'",
+        callback:commandCatch,
+    },
     
     map: {
         name: "map",
