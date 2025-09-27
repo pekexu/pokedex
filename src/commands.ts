@@ -7,6 +7,7 @@ import { commandMapBack } from "./command_map.js";
 import { commandExplore } from "./command_explore.js";
 import { commandCatch } from "./command_catch.js";
 import { commandInspect } from "./command_inspect.js";
+import { commandPokedex } from "./command_pokedex.js";
 
 export function getCommands(): Record<string, CLICommand> {
     return {
@@ -21,7 +22,11 @@ export function getCommands(): Record<string, CLICommand> {
         callback:commandInspect,
 
     },
-    
+    pokedex: {
+        name: "pokedex",
+        description: "List all caught pokemons",
+        callback:commandPokedex,
+    },
     map: {
         name: "map",
         description: "Displays names of next 20 location areas",
