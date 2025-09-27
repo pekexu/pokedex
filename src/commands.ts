@@ -4,6 +4,7 @@ import { commandExit } from "./command_exit.js";
 import type { CLICommand } from "./state.js";
 import { commandMap } from "./command_map.js";
 import { commandMapBack } from "./command_map.js";
+import { commandExplore } from "./command_explore.js";
 
 export function getCommands(): Record<string, CLICommand> {
     return {
@@ -18,7 +19,11 @@ export function getCommands(): Record<string, CLICommand> {
         description: "Displays names of previous 20 location areas",
         callback: commandMapBack,
     },
-
+    explore: {
+        name: "explore",
+        description: "Displays in on location. Usage 'explore location'",
+        callback: commandExplore,
+    },
     help: {
         name: "help",
         description: "Displays a help message",
